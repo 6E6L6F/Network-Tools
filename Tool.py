@@ -14,9 +14,9 @@ class Mac:
     def __init__(self , ip_1 , ip_2):
         self.ip1 = ip_1
         self.ip2 = ip_2
-        self.list_ip = []
+        
     def Create_Range_Ip(self):
-        create_ = [self.list_ip.append(str(IPAddress(i))) for i in range(int(IPAddress(self.ip1)) , int(IPAddress(self.ip2))+1)]
+        self.list_ip = [str(IPAddress(i)) for i in range(int(IPAddress(self.ip1)) , int(IPAddress(self.ip2))+1)]
         p(f'{C.GREEN}Created All Ranges Ips..!')
         time.sleep(3)
 
